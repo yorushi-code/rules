@@ -3,80 +3,148 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nota Bene — Правила TeeFusion (демо)</title>
+  <title>Rules — Yorushi Code</title>
 
-  <!-- Простая стилизация -->
+  <!-- 🌈 Новый стиль -->
   <style>
-    :root{
-      --maxw: 900px;
-      --bg: #0f1724;
-      --card: #0b1220;
-      --text: #e6eef8;
-      --muted: #9fb0d3;
+    :root {
+      --bg: #0c0d1a;
+      --fg: #f2f2f2;
+      --accent: #6b63ff;
+      --muted: #a0a2b5;
+      --card: #15162b;
     }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071028 0%, #0b1220 100%);font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
-    .wrap{max-width:var(--maxw);margin:40px auto;padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.6);}
-    header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-    header h1{margin:0;font-size:20px;color:var(--text)}
-    header p{margin:0;color:var(--muted);font-size:13px}
-    main{color:var(--text);line-height:1.6}
-    pre{background:#071124;padding:12px;border-radius:8px;overflow:auto}
-    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;}
-    a{color:#7cc2ff}
-    /* Markdown content tweaks */
-    .content h2{border-bottom:1px solid rgba(255,255,255,0.03);padding-bottom:6px}
-    .meta{font-size:13px;color:var(--muted);margin-bottom:12px}
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      font-size: 17px;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem 1.5rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      margin-top: 0.4rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    main {
+      max-width: 850px;
+      margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+    }
+
+    article {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    pre {
+      background: #0a0b1a;
+      color: #eaeaea;
+      padding: 1rem;
+      border-radius: 10px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: "JetBrains Mono", monospace;
+      background: #1b1d32;
+      color: #e1e1ff;
+      padding: 0.15rem 0.3rem;
+      border-radius: 4px;
+    }
+
+    .meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      article {
+        padding: 1.5rem;
+      }
+    }
   </style>
 
-  <!-- marked.js (Markdown -> HTML) -->
+  <!-- marked.js (Markdown parser) -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <!-- highlight.js для подсветки кода -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+  <!-- highlight.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Nota Bene: Правила TeeFusion — Демонстрация</h1>
-        <p>Markdown рендерится прямо из <code>README.md</code></p>
-      </div>
-    </header>
+  <header>
+    <h1>Rules</h1>
+    <p>Project by Yorushi</p>
+  </header>
 
-    <main>
-      <div class="meta">Состояние: загружаем файл...</div>
-      <article id="md" class="content"></article>
-    </main>
-  </div>
+  <main>
+    <div class="meta">Загрузка содержимого README.md...</div>
+    <article id="content"></article>
+  </main>
+
+  <footer>
+    <p>© 2025 Yorushi Code. Powered by GitHub Pages.</p>
+  </footer>
 
   <script>
-    // Попробуем загрузить локальный README.md (из того же репозитория)
     fetch('./README.md')
-      .then(r => {
-        if (!r.ok) throw new Error('Не удалось загрузить README.md (' + r.status + ')');
-        return r.text();
-      })
+      .then(r => r.ok ? r.text() : Promise.reject(r.status))
       .then(md => {
-        const container = document.getElementById('md');
-        // Настройки marked (можно поменять по вкусу)
-        marked.setOptions({
-          breaks: false,
-          gfm: true,
-          headerIds: true,
-          mangle: false
-        });
-        container.innerHTML = marked.parse(md);
-        document.querySelector('.meta').textContent = 'Файл README.md успешно загружен и отрендерен.';
-        // подсветка кода
-        document.querySelectorAll('pre code').forEach((block) => {
-          hljs.highlightElement(block);
-        });
+        const html = marked.parse(md);
+        document.getElementById('content').innerHTML = html;
+        document.querySelector('.meta').textContent = '';
+        document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
       })
       .catch(err => {
-        document.querySelector('.meta').textContent = 'Ошибка: ' + err.message + '. Пробуем показать встроенный вариант.';
-        // If fetch fails (e.g. opened from file://), show fallback: raw markdown embedded below
-        const fallback = `# Ошибка загрузки README.md\n\nНе удалось подгрузить файл README.md по относительному пути. Убедитесь, что index.html и README.md находятся в одной папке, или откройте страницу через веб-сервер / GitHub Pages.`;
-        document.getElementById('md').innerHTML = marked.parse(fallback);
+        document.querySelector('.meta').textContent = 'Не удалось загрузить README.md';
+        document.getElementById('content').innerHTML =
+          `<p style="color:#ff8080">Ошибка загрузки файла (код: ${err})</p>`;
       });
   </script>
 </body>
