@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nota Bene — Правила TeeFusion (демо)</title>
+
+  <!-- Простая стилизация -->
+  <style>
+    :root{
+      --maxw: 900px;
+      --bg: #0f1724;
+      --card: #0b1220;
+      --text: #e6eef8;
+      --muted: #9fb0d3;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071028 0%, #0b1220 100%);font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    .wrap{max-width:var(--maxw);margin:40px auto;padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.6);}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    header h1{margin:0;font-size:20px;color:var(--text)}
+    header p{margin:0;color:var(--muted);font-size:13px}
+    main{color:var(--text);line-height:1.6}
+    pre{background:#071124;padding:12px;border-radius:8px;overflow:auto}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;}
+    a{color:#7cc2ff}
+    /* Markdown content tweaks */
+    .content h2{border-bottom:1px solid rgba(255,255,255,0.03);padding-bottom:6px}
+    .meta{font-size:13px;color:var(--muted);margin-bottom:12px}
+  </style>
+
+  <!-- marked.js (Markdown -> HTML) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- highlight.js для подсветки кода -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Nota Bene: Правила TeeFusion — Демонстрация</h1>
+        <p>Markdown рендерится прямо из <code>README.md</code></p>
+      </div>
+    </header>
+
+    <main>
+      <div class="meta">Состояние: загружаем файл...</div>
+      <article id="md" class="content"></article>
+    </main>
+  </div>
+
+  <script>
+    // Попробуем загрузить локальный README.md (из того же репозитория)
+    fetch('./README.md')
+      .then(r => {
+        if (!r.ok) throw new Error('Не удалось загрузить README.md (' + r.status + ')');
+        return r.text();
+      })
+      .then(md => {
+        const container = document.getElementById('md');
+        // Настройки marked (можно поменять по вкусу)
+        marked.setOptions({
+          breaks: false,
+          gfm: true,
+          headerIds: true,
+          mangle: false
+        });
+        container.innerHTML = marked.parse(md);
+        document.querySelector('.meta').textContent = 'Файл README.md успешно загружен и отрендерен.';
+        // подсветка кода
+        document.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightElement(block);
+        });
+      })
+      .catch(err => {
+        document.querySelector('.meta').textContent = 'Ошибка: ' + err.message + '. Пробуем показать встроенный вариант.';
+        // If fetch fails (e.g. opened from file://), show fallback: raw markdown embedded below
+        const fallback = `# Ошибка загрузки README.md\n\nНе удалось подгрузить файл README.md по относительному пути. Убедитесь, что index.html и README.md находятся в одной папке, или откройте страницу через веб-сервер / GitHub Pages.`;
+        document.getElementById('md').innerHTML = marked.parse(fallback);
+      });
+  </script>
+</body>
+</html>
