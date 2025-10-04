@@ -6,13 +6,15 @@
   <title>Rules — Yorushi Code</title>
 
   <!-- 🌈 Новый стиль -->
-  <style>
+    <style>
     :root {
-      --bg: #0c0d1a;
-      --fg: #f2f2f2;
-      --accent: #6b63ff;
-      --muted: #a0a2b5;
-      --card: #15162b;
+      --bg: #111222;
+      --fg: #f5f6fa;
+      --accent: #7a8cff;
+      --accent-strong: #9daaff;
+      --muted: #b0b2c5;
+      --card: #191b2f;
+      --code-bg: #232540;
     }
 
     * {
@@ -38,8 +40,9 @@
     header h1 {
       margin: 0;
       font-size: 2rem;
-      color: var(--accent);
+      color: var(--accent-strong);
       letter-spacing: 0.5px;
+      text-shadow: 0 0 8px rgba(122, 140, 255, 0.25);
     }
 
     header p {
@@ -56,13 +59,13 @@
 
     article {
       background: var(--card);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 2rem 2.5rem;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.35);
     }
 
     h1, h2, h3, h4 {
-      color: var(--accent);
+      color: var(--accent-strong);
       font-weight: 600;
     }
 
@@ -70,23 +73,26 @@
       color: var(--accent);
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
+      color: var(--accent-strong);
     }
 
     pre {
-      background: #0a0b1a;
-      color: #eaeaea;
+      background: var(--code-bg);
+      color: #f0f0ff;
       padding: 1rem;
       border-radius: 10px;
       overflow-x: auto;
+      border: 1px solid rgba(122, 140, 255, 0.15);
     }
 
     code {
       font-family: "JetBrains Mono", monospace;
-      background: #1b1d32;
-      color: #e1e1ff;
-      padding: 0.15rem 0.3rem;
+      background: rgba(140, 160, 255, 0.1);
+      color: #e0e2ff;
+      padding: 0.2rem 0.35rem;
       border-radius: 4px;
     }
 
@@ -110,6 +116,7 @@
       }
     }
   </style>
+
 
   <!-- marked.js (Markdown parser) -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
